@@ -72,8 +72,8 @@ class ContactView(FormView):
         Automatically fills form fields for authenticated users.
         """
         initial = super(ContactView, self).get_initial().copy()
-        user = self.request.user
-        if user.is_authenticated():
+        user = getattr(self.request, 'user', None)
+        if user is not None and user.is_authenticated():
             # the user might not have a full name set in the model
             if user.get_full_name():
                 sender = '%s (%s)' % (user.get_username(), user.get_full_name())
